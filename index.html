@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cohort-10 Certification Quiz</title>
-<meta name="description" content="Timed practice quizzes for Modules 3, 4 and 5 of the cohort-10 Claude Developer Certification.">
+<meta name="description" content="Practice quizzes for Modules 3, 4 and 5 of the cohort-10 Claude Developer Certification.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
 :root { color-scheme: light; }
@@ -92,13 +92,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* question */
 .qhead { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
 .qhead .meta { display: flex; gap: 16px; font-size: 14px; color: var(--muted); }
-.timer { display: flex; align-items: center; gap: 12px; }
-.bar { flex: 1; height: 8px; background: var(--sunk); border-radius: 99px; overflow: hidden; }
-.bar > i { display: block; height: 100%; width: 100%; background: var(--good); border-radius: 99px; transition: width 0.12s linear, background-color 0.3s; }
-.timer.warn .bar > i { background: var(--warn); }
-.timer.danger .bar > i { background: var(--bad); }
-.timer b { min-width: 3.2ch; text-align: right; font-size: 20px; font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-weight: 500; }
-.timer.danger b { color: var(--bad); }
 .qcard { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
 pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px; font: 13px/1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
 .opts { display: flex; flex-direction: column; gap: 10px; }
@@ -118,8 +111,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 .fb .head { font-weight: 700; }
 .fb.ok .head { color: var(--good); }
 .fb.no .head { color: var(--bad); }
-.adv { height: 4px; background: color-mix(in srgb, var(--fg) 12%, transparent); border-radius: 99px; overflow: hidden; }
-.adv > i { display: block; height: 100%; width: 100%; background: var(--fg); opacity: 0.45; }
 
 /* results */
 .big { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -128,12 +119,10 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 .strip i { width: 16px; height: 16px; border-radius: 4px; background: var(--sunk); }
 .strip i.c { background: var(--good); }
 .strip i.w { background: var(--bad); }
-.strip i.t { background: var(--warn); }
 .legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
 .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; background: var(--sunk); }
 .legend .c::before { background: var(--good); }
 .legend .w::before { background: var(--bad); }
-.legend .t::before { background: var(--warn); }
 .mrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; }
 .mrow .mb { grid-column: 1 / -1; height: 6px; background: var(--sunk); border-radius: 99px; overflow: hidden; }
 .mrow .mb i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
@@ -146,8 +135,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 .mcard .ms { grid-column: 1; font-size: 14px; color: var(--muted); }
 .mcard .go { grid-row: 1 / span 2; grid-column: 2; font-weight: 700; color: var(--accent); white-space: nowrap; }
 .mcard .done { color: var(--good); }
-
-@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
 
 </style>
 </head>
@@ -164,13 +151,12 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
   <section id="vStart" class="hero">
     <span class="eyebrow">Claude Developer Certification &middot; Cohort 10</span>
     <h1>Practice quiz</h1>
-    <p class="lead">Three modules, 12 questions each. Solve one module at a time, in any order. Every question has a 40-second timer, and the correct answer appears as soon as you answer or time runs out.</p>
+    <p class="lead">Three modules, 12 questions each. Solve one module at a time, in any order. The correct answer appears as soon as you answer.</p>
     <div class="panel">
       <div class="modcards" id="modCards"></div>
       <div class="facts">
-        <div class="fact"><b>40 s</b><span>per question</span></div>
         <div class="fact"><b>100 pts</b><span>per correct answer</span></div>
-        <div class="fact"><b>0 pts</b><span>wrong or unanswered</span></div>
+        <div class="fact"><b>0 pts</b><span>wrong answer</span></div>
       </div>
     </div>
   </section>
@@ -181,7 +167,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
       <span class="eyebrow" id="qMod"></span>
       <div class="meta"><span id="qCount" class="num"></span><span id="qScore" class="num"></span></div>
     </div>
-    <div class="timer" id="timer"><div class="bar"><i id="tBar"></i></div><b id="tNum">40</b></div>
     <div class="qcard">
       <h2 id="qText"></h2>
       <pre class="ctx" id="qCtx" hidden></pre>
@@ -189,7 +174,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
       <div class="fb" id="fb" hidden aria-live="polite">
         <div class="head" id="fbHead"></div>
         <p id="fbWhy"></p>
-        <div class="adv"><i id="advBar"></i></div>
         <div class="row"><button class="btn" id="nextBtn">Next question</button></div>
       </div>
     </div>
@@ -203,7 +187,7 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
     <div class="panel">
       <h3>Every question</h3>
       <div class="strip" id="rStrip"></div>
-      <div class="legend"><span class="c">Correct</span><span class="w">Wrong</span><span class="t">Timed out</span></div>
+      <div class="legend"><span class="c">Correct</span><span class="w">Wrong</span></div>
     </div>
     <div class="row">
       <button class="btn" id="nextModBtn">Continue</button>
@@ -215,7 +199,7 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 
 <script>
 (function () {
-  var T = 40, REVIEW = 5, PTS = 100;
+  var PTS = 100;
   var MODS = {
     3: "Module 3 · Claude Code, MCP & Integration",
     4: "Module 4 · Claude Code & MCP (Simple)",
@@ -404,7 +388,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
   function rich(s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>"); }
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function ansIdx(x) { return L.indexOf(atob(x.a)); }
-  function fmtTime(ms) { var s = Math.round(ms / 1000); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
 
   var views = ["vStart", "vQuiz", "vResult"];
   function show(id) {
@@ -413,7 +396,7 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
   }
 
   /* ---------- state ---------- */
-  var S = { m: 3, qs: [], i: 0, score: 0, correct: 0, timeMs: 0, log: [], locked: false, deadline: 0, tick: null, adv: null };
+  var S = { m: 3, qs: [], i: 0, score: 0, correct: 0, log: [], locked: false };
   var BEST = {};
   try { BEST = JSON.parse(localStorage.getItem("c10quiz-best") || "{}") || {}; } catch (e) { BEST = {}; }
   function saveBest() { try { localStorage.setItem("c10quiz-best", JSON.stringify(BEST)); } catch (e) {} }
@@ -451,7 +434,7 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 
   function startModule(m) {
     S.m = m; S.qs = QS[m];
-    S.i = 0; S.score = 0; S.correct = 0; S.timeMs = 0; S.log = [];
+    S.i = 0; S.score = 0; S.correct = 0; S.log = [];
     show("vQuiz");
     renderQ();
   }
@@ -476,20 +459,6 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
       box.appendChild(b);
     });
     $("fb").hidden = true;
-    S.deadline = Date.now() + T * 1000;
-    updateTimer();
-    clearInterval(S.tick);
-    S.tick = setInterval(updateTimer, 100);
-  }
-
-  function updateTimer() {
-    if (S.locked) return;
-    var rem = Math.max(0, S.deadline - Date.now());
-    $("tBar").style.width = (rem / (T * 1000) * 100) + "%";
-    var secs = Math.ceil(rem / 1000);
-    $("tNum").textContent = secs + "s";
-    $("timer").className = "timer" + (secs <= 10 ? " danger" : secs <= 20 ? " warn" : "");
-    if (rem <= 0) reveal(-1);
   }
 
   function pick(k) { if (!S.locked) reveal(k); }
@@ -497,15 +466,11 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
   function reveal(k) {
     if (S.locked) return;
     S.locked = true;
-    clearInterval(S.tick);
     var x = S.qs[S.i], right = ansIdx(x);
-    var used = k === -1 ? T * 1000 : Math.min(T * 1000, T * 1000 - Math.max(0, S.deadline - Date.now()));
-    S.timeMs += used;
     var ok = k === right;
     if (ok) { S.score += PTS; S.correct++; }
-    S.log.push(ok ? "1" : k === -1 ? "t" : "0");
+    S.log.push(ok ? "1" : "0");
     $("qScore").textContent = S.score + " pts";
-    if (k === -1) $("tNum").textContent = "0s";
 
     var btns = $("opts").children;
     for (var j = 0; j < btns.length; j++) {
@@ -517,21 +482,14 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
     var fb = $("fb");
     fb.className = "fb " + (ok ? "ok" : "no");
     $("fbHead").textContent = ok ? "Correct. +" + PTS + " pts"
-      : (k === -1 ? "Time's up. " : "Not quite. ") + "The correct answer is " + L[right] + ".";
+      : "Not quite. The correct answer is " + L[right] + ".";
     $("fbWhy").innerHTML = rich(x.e);
     $("nextBtn").textContent = S.i === S.qs.length - 1 ? "See results" : "Next question";
     fb.hidden = false;
 
-    var adv = $("advBar");
-    adv.style.transition = "none"; adv.style.width = "100%";
-    void adv.offsetWidth;
-    adv.style.transition = "width " + REVIEW + "s linear"; adv.style.width = "0%";
-    clearTimeout(S.adv);
-    S.adv = setTimeout(advance, REVIEW * 1000);
   }
 
   function advance() {
-    clearTimeout(S.adv);
     if (!S.locked) return;
     if (S.i >= S.qs.length - 1) { finish(); return; }
     S.i++;
@@ -551,19 +509,18 @@ pre.ctx { margin: 0; background: var(--sunk); border-radius: 10px; padding: 14px
 
   /* ---------- results ---------- */
   function finish() {
-    clearInterval(S.tick); clearTimeout(S.adv);
     var n = S.qs.length, prev = BEST[S.m];
     var isBest = !prev || S.score > prev.score;
     if (isBest) { BEST[S.m] = { score: S.score, correct: S.correct }; saveBest(); }
     $("rMod").textContent = "Module " + S.m + " complete · " + TITLES[S.m];
     $("rScore").textContent = S.score;
     $("rOf").textContent = "/ " + (n * PTS) + " pts";
-    $("rLine").textContent = S.correct + " of " + n + " correct in " + fmtTime(S.timeMs) + " of answering time. " +
+    $("rLine").textContent = S.correct + " of " + n + " correct. " +
       (isBest ? (prev ? "New personal best." : "") : "Your best for this module is " + prev.score + " pts.");
     var strip = $("rStrip"); strip.innerHTML = "";
     S.log.forEach(function (c, i) {
-      var b = el("i", c === "1" ? "c" : c === "t" ? "t" : "w");
-      b.title = "Question " + (i + 1) + (c === "1" ? ": correct" : c === "t" ? ": timed out" : ": wrong");
+      var b = el("i", c === "1" ? "c" : "w");
+      b.title = "Question " + (i + 1) + (c === "1" ? ": correct" : ": wrong");
       strip.appendChild(b);
     });
     var nb = $("nextModBtn");
